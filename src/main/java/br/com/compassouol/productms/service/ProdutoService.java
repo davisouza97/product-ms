@@ -7,8 +7,8 @@ import br.com.compassouol.productms.repository.ProdutoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +26,8 @@ public class ProdutoService {
         ).collect(Collectors.toList());
     }
 
-    public List<ProdutoDTO> getProdutos(String q,String minPrice,String maxPrice) {
-        return produtoRepository.findProdutos(q, minPrice, maxPrice).stream().map(
+    public List<ProdutoDTO> getProdutos(String nameOrDescription, BigDecimal minPrice, BigDecimal maxPrice) {
+        return produtoRepository.findProdutos(nameOrDescription, minPrice, maxPrice).stream().map(
                 produto -> modelMapper.map(produto, ProdutoDTO.class)
         ).collect(Collectors.toList());
     }

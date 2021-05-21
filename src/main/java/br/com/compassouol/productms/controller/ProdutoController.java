@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -27,23 +29,24 @@ public class ProdutoController {
     }
 
     @GetMapping("/search")
-    public String produtosByFilter(@RequestParam(required = false) String q,@RequestParam(required = false) String min_price,
-                                   @RequestParam(required = false) String max_price) {
-        return q;
+    public ResponseEntity<List<ProdutoDTO>> produtosByFilter(@RequestParam(required = false, name = "q") String nameOrDescrition,
+                                                             @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
+                                                             @RequestParam(required = false, name = "max_price") BigDecimal maxPrice) {
+        return ResponseEntity.ok(produtoService.getProdutos(nameOrDescrition, minPrice, maxPrice));
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoDTO> cadastrarProdutos(@RequestBody ProdutoDTO produtoDTO) {
+    public ResponseEntity<ProdutoDTO> cadastrarProdutos(@Valid @RequestBody ProdutoDTO produtoDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.saveProduto(produtoDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> editarProdutos(@PathVariable("id") String id, @RequestBody ProdutoDTO produtoDTO) {
-        return ResponseEntity.ok(produtoService.editProduto(id,produtoDTO));
+    public ResponseEntity<ProdutoDTO> editarProdutos(@PathVariable("id") String id,@Valid @RequestBody ProdutoDTO produtoDTO) {
+        return ResponseEntity.ok(produtoService.editProduto(id, produtoDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletarProdutos(@PathVariable("id") String id){
+    public ResponseEntity<Object> deletarProdutos(@PathVariable("id") String id) {
         produtoService.deleteProduto(id);
         return ResponseEntity.ok().build();
     }

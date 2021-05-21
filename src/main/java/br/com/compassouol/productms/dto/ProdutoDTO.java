@@ -1,11 +1,16 @@
 package br.com.compassouol.productms.dto;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 public class ProdutoDTO {
     private String id;
+    @NotBlank(message = "Campo name obrigatório")
     private String name;
+    @NotBlank(message = "Campo description obrigatório")
     private String description;
+    @DecimalMin(value = "0.01", message = "Campo price deve ser positivo")
     private BigDecimal price;
 
     public ProdutoDTO() {
