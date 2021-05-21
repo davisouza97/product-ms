@@ -1,6 +1,7 @@
 package br.com.compassouol.productms.handler;
 
 import br.com.compassouol.productms.exception.GenericException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<String> validationList = ex.getBindingResult().getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
-        return ResponseEntity.status(500).body(new ErroMessage(400, validationList.toString() ));
+        List<String> validationList = ex.getBindingResult().getFieldErrors().stream().map(
+                DefaultMessageSourceResolvable::getDefaultMessage
+        ).collect(Collectors.toList());
+        return ResponseEntity.status(500).body(new ErroMessage(400, validationList.toString().replace("[","").replace("]","") ));
     }
 
     @ExceptionHandler(value = {Exception.class})
